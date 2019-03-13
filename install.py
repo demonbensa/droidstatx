@@ -15,7 +15,7 @@ def chunk_report(bytes_so_far, chunk_size, total_size):
         sys.stdout.write('\n')
 
 def chunk_read(response, chunk_size=8192, report_hook=None):
-    total_size = response.info().getheader('Content-Length').strip()
+    total_size = response.getheader('content-length').strip()
     total_size = int(total_size)
     bytes_so_far = 0
     data = []
@@ -27,16 +27,16 @@ def chunk_read(response, chunk_size=8192, report_hook=None):
         if not chunk:
             break
 
-        data += chunk
+        data.append(chunk)
         if report_hook:
             report_hook(bytes_so_far, chunk_size, total_size)
 
-    return "".join(data)
+    return b"".join(data)
 
 if __name__ == '__main__':
     print("[-]Downloading latest Apktool version...")
-    response = urllib.request.urlopen("https://api.github.com/repos/iBotPeaches/Apktool/releases/latest")
-    jsonData = json.load(response)
+    response = urllib.request.urlopen("https://api.github.com/repos/iBotPeaches/Apktool/releases/latest").read()
+    jsonData = json.loads(response.decode('utf-8'))
     url = jsonData["assets"][0]["browser_download_url"]
     response = urllib.request.urlopen(url)
     data = chunk_read(response, report_hook=chunk_report)
