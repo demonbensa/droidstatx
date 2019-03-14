@@ -67,7 +67,7 @@ class SmaliChecks:
         command = [self.getOSGnuGrepCommand(), "-s", "-r", "-l", "-P", objectRegEx, " --exclude-dir=" + self.configuration.getFolderExclusions()]
         for path in folderPath:
             command.append(path)
-        grep = Popen(command, stdout=PIPE)
+        grep = Popen(command, stdout=PIPE, universal_newlines=True)
         filePaths = grep.communicate()[0].strip().split('\n')
         if len(filePaths) > 0:
             return filePaths
@@ -75,7 +75,7 @@ class SmaliChecks:
             raise NotFound
 
     def existsInFile(self, objectRegEx, filePath):
-        grep = Popen([self.getOSGnuGrepCommand(), "-l", "-P", objectRegEx, filePath], stdout=PIPE)
+        grep = Popen([self.getOSGnuGrepCommand(), "-l", "-P", objectRegEx, filePath], stdout=PIPE, universal_newlines=True)
         filePaths = grep.communicate()[0].strip().split('\n')
         if len(filePaths) > 0:
             return filePaths
@@ -83,17 +83,17 @@ class SmaliChecks:
             return False
 
     def getMethodCompleteInstructions(self, methodRegEx, filePath):
-        sed = Popen(["sed", "-n", methodRegEx, filePath], stdout=PIPE)
+        sed = Popen(["sed", "-n", methodRegEx, filePath], stdout=PIPE, universal_newlines=True)
         methodContent = sed.communicate()[0]
         return methodContent.strip().replace('    ', '').split('\n')
 
     def getFileContent(self, filePath):
-        sed = Popen(["sed", "1p", filePath], stdout=PIPE)
+        sed = Popen(["sed", "1p", filePath], stdout=PIPE, universal_newlines=True)
         fileContent = sed.communicate()[0]
         return fileContent.strip().replace('    ', '').split('\n')
 
     def getMethodInstructions(self, methodRegEx, filePath):
-        sed = Popen(["sed", "-n", methodRegEx, filePath], stdout=PIPE)
+        sed = Popen(["sed", "-n", methodRegEx, filePath], stdout=PIPE, universal_newlines=True)
         methodContent = sed.communicate()[0]
         try:
             match = re.search(r".locals \d{1,}([\S\s]*?).end method", methodContent)

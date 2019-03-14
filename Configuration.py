@@ -13,7 +13,7 @@ class Configuration:
     def geXmindTopicStructure(self):
         return self.configParser.get("Settings", "xmindTopicStructure")
 
-    def getXmindTopipFoldAt(self):
+    def getXmindTopicFoldAt(self):
         return int(self.configParser.get("Settings", "topicFoldAt"))
 
     def getFileExclusions(self):

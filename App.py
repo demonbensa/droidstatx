@@ -579,8 +579,9 @@ class App:
 
     def bakmali(self, apkFile):
         cwd = os.path.dirname(os.path.realpath(__file__))
-        apktool = Popen(["java", "-jar", cwd + "/apktool.jar", "d", "-b", "-f", "--frame-path", "/tmp/", apkFile, "-o", self.getAPKToolFolder() + "/"], stdout=PIPE)
+        apktool = Popen(["java", "-jar", cwd + "/apktool.jar", "d", "-b", "-f", "--frame-path", "/tmp/", apkFile, "-o", self.getAPKToolFolder() + "/"], stdout=PIPE, universal_newlines=True)
         output = apktool.communicate()[0]
+        print(output)
         numberOfDexFiles = output.count("Baksmaling")
         if numberOfDexFiles > 1:
             path = self.getAPKToolFolder() + "/smali/"
@@ -597,8 +598,8 @@ class App:
         cwd = os.path.dirname(os.path.realpath(__file__))
         bundledFile = self.getAPKToolFolder() + "/" + self.xamarinBundledFile
         command = ["objdump", "-T", "-x", "-j", ".rodata", bundledFile]
-        objdump = Popen(command, stdout=PIPE)
-        sed = Popen(["sed", "-e", "1,/DYNAMIC SYMBOL TABLE/ d"], stdin=objdump.stdout, stdout=PIPE)
+        objdump = Popen(command, stdout=PIPE, universal_newlines=True)
+        sed = Popen(["sed", "-e", "1,/DYNAMIC SYMBOL TABLE/ d"], stdin=objdump.stdout, stdout=PIPE, universal_newlines=True)
         dlls = []
         for line in sed.stdout:
             if len(line.strip().split()) > 0:
@@ -617,6 +618,6 @@ class App:
                     "if=" + bundledFile, "skip=" + str(skip), "count=" + str(length),
                     "of=" + cwd + "/output_dlls/" + packageFolder + "/" + name]
                 files.append(cwd + "/output_dlls/" + packageFolder + "/" + name)
-                dd = Popen(command, stderr=PIPE).wait()
+                dd = Popen(command, stderr=PIPE, universal_newlines=True).wait()
         for f in files:
-            Popen(["gzip", "-d", "-f", f], stdout=PIPE).wait()
+            Popen(["gzip", "-d", "-f", f], stdout=PIPE, universal_newlines=True).wait()
