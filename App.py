@@ -580,7 +580,7 @@ class App:
 
     def bakmali(self, apkFile):
         cwd = os.path.dirname(os.path.realpath(__file__))
-        apktool = Popen(["java", "-jar", cwd + "/apktool.jar", "d", "-b", "-f", "--frame-path", "/tmp/", apkFile, "-o", self.getAPKToolFolder() + "/"], stdout=PIPE, universal_newlines=True)
+        apktool = Popen(["java", "-Xms64m", "-Xmx1024m", "-jar", cwd + "/apktool.jar", "d", "-b", "-f", "--frame-path", "/tmp/", apkFile, "-o", self.getAPKToolFolder() + "/"], stdout=PIPE, universal_newlines=True)
         output = apktool.communicate()[0]
         print(output)
         numberOfDexFiles = output.count("Baksmaling")
@@ -664,7 +664,10 @@ class App:
         for attr in attrs:
             value = getattr(self, attr)
             if isinstance(value, list):
-                value = sorted(value)
+                try:
+                    value = sorted(value)
+                except TypeError:
+                    pass
             elif callable(value):
                 value = value()
 
