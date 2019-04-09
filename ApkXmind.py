@@ -474,9 +474,8 @@ class ApkXmind:
             "https://github.com/OWASP/owasp-mstg/blob/master/Document/0x05g-Testing-Network-Communication.md#verifying-the-server-certificate")
         if len(self.app.smaliChecks.getVulnerableTrustManagers()) != 0:
             trustManagerSubTopic.setTitle("Vulnerable Trust Manager:")
-            self.createSubTopics(trustManagerSubTopic, self.app.smaliChecks.getVulnerableTrustManagers())
-            topicElement.getSubTopicByIndex(0).addSubTopic(trustManagerSubTopic)
             trustManagerSubTopic.addMarker('flag-red')
+            self.createSubTopics(trustManagerSubTopic, self.app.smaliChecks.getVulnerableTrustManagers())
         else:
             trustManagerSubTopic.setTitle("No vulnerable Trust Manager found.")
             trustManagerSubTopic.addMarker('flag-green')
