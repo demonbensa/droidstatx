@@ -672,7 +672,7 @@ class App:
             content.append(elem[0] + " :: " + str(elem[1]))
 
         cwd = os.path.dirname(os.path.realpath(__file__))
-        filepath = os.path.join(cwd, "droidstatx-" + self.packageName + ".txt")
+        filepath = os.path.join(cwd, "/output_txt/" + self.packageName + ".txt")
         with open(filepath, "w") as file:
             file.truncate()
             for line in content:
