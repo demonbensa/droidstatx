@@ -215,11 +215,22 @@ class App:
                     if data.get(self.NS_ANDROID + "scheme") == "android_secret_code":
                         self.secretCodes.append(data.get(self.NS_ANDROID + "host"))
 
-    # Create a global list of activities with the excludeFromRecentes attribute
+    # Create a global list of activities with the excludeFromRecents attribute
     def extractActivitiesWithExcludeFromRecents(self):
         for activity in self.application.findall("activity"):
             if activity.get(self.NS_ANDROID + "excludeFromRecents") == 'true':
-                self.activitiesWithExcludeFromRecents.append(activity)
+                self.activitiesWithExcludeFromRecents.append(activity.get(self.NS_ANDROID + "name"))
+
+    # Create a global list of activities that do not have the FLAG_SECURE or the excludeFromRecents attribute set.
+    def extractActivitiesWithoutSecureFlag(self):
+        activitiesWithoutSecureFlag = []
+        for activity in self.a.get_activities():
+            if self.smaliChecks.doesActivityHasFlagSecure(activity) is False and activity not in self.getActivitiesWithExcludeFromRecents():
+                try:
+                    activity.encode("ascii")
+                except UnicodeEncodeError as e:
+                    activity = activity.encode('ascii', 'xmlcharrefreplace')
+                self.activitiesWithoutFlagSecure.append(activity)
 
     # Return the ProtectionLevel of a particular Permission
     def determinePermissionProtectionLevel(self, targetPermission):
@@ -545,17 +556,6 @@ class App:
                         self.otherFiles.append(f)
         except UnicodeDecodeError as e:
             pass
-
-    # Create a global list of activities that do not have the FLAG_SECURE or the excludeFromRecents attribute set.
-    def extractActivitiesWithoutSecureFlag(self):
-        activitiesWithoutSecureFlag = []
-        for activity in self.a.get_activities():
-            if self.smaliChecks.doesActivityHasFlagSecure(activity) is False and activity not in self.getActivitiesWithExcludeFromRecents():
-                try:
-                    activity.encode("ascii")
-                except UnicodeEncodeError as e:
-                    activity = activity.encode('ascii', 'xmlcharrefreplace')
-                self.activitiesWithoutFlagSecure.append(activity)
 
     def getActivitiesWithExcludeFromRecents(self):
         return self.activitiesWithExcludeFromRecents
