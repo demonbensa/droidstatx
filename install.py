@@ -41,7 +41,7 @@ if __name__ == '__main__':
     response = urllib.request.urlopen(url)
     data = chunk_read(response, report_hook=chunk_report)
     cwd = os.getcwd()
-    directories = ["/output_xmind", "/output_apktool"]
+    directories = ["/output_xmind", "/output_apktool", "/output_txt"]
     for directory in directories:
         if not os.path.exists(cwd + directory):
             os.makedirs(cwd + directory)
