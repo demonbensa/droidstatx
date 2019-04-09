@@ -50,7 +50,7 @@ I collaborated a little bit on the OWASP MSTG project and have to give a big sho
 
 The tool will automatically fill some of the topics with evidences based on the analysis, to help confirm if it is a false or a true positive.
 
-Each time the tool runs against a package, if the xmind map already exists,a new tab will be created on the workbook. This way it’s possible to keep a history file of every new version tested and compare it against previous runs.
+Each time the tool runs against a package, if the xmind map already exists, a new tab will be created on the workbook. This way it’s possible to keep a history file of every new version tested and compare it against previous runs.
 
 **Information Returned**
 * Package Properties
@@ -105,7 +105,7 @@ Each time the tool runs against a package, if the xmind map already exists,a new
 
 **Under the Hood**
 
-Androguard toolkit from Anthony Desnos is being used to gather all the package info (properties,components,files,etc).
+Androguard toolkit from Anthony Desnos is being used to gather all the package info (properties, components, files, etc).
 
 For the Xmind map generation, XMind SDK for python from Xmind is being used, which unfortunately stopped receiving updates 4 years ago. A project fork was required to add some features like the support for the topic structure. A pull request was made with these changes to their repo. If the request is merged, the project will start using their repo instead.
 
@@ -123,7 +123,7 @@ Right now, this standalone module is being released as a quick win, but sometime
 
 Based on the work started on 2015, and since I wanted to learn and improve my understanding of Dalvik Bytecode, I created all the static checks from scratch, following my own thinking/approach. Other tools’ approaches will differ.
 
-That being said, I've tested the tool against the top 30 applications in the Play Store, around 60 other applications, including several vulnerable applications created for the effect, and manually performed the review on all of them to try and guarantee the tool’s accuracy and completeness but there may exist scenarios where the tool will not behave correctly; if you find any bugs, or incorrect or missing information,please create an Issue on the project.
+That being said, I've tested the tool against the top 30 applications in the Play Store, around 60 other applications, including several vulnerable applications created for the effect, and manually performed the review on all of them to try and guarantee the tool’s accuracy and completeness but there may exist scenarios where the tool will not behave correctly; if you find any bugs, or incorrect or missing information, please create an Issue on the project.
 
 **References**
 * [Hacking Androids for fun and Profit - Riley Hassel](http://conference.hitb.org/hitbsecconf2011kul/materials/D1T1%20-*%20Riley%20Hassell%20-%20Exploiting%20Androids%20for%20Fun%20and%20Profit.pdf)

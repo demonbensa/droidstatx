@@ -1,0 +1,6 @@
+*.pyc
+*.apk
+*.jar
+.vscode/
+output_apktool/
+output_xmind/
