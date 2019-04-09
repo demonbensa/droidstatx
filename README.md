@@ -12,7 +12,8 @@ You have two options. Use Docker with the provided docker file or use the follow
 
 ***Pre-requisites***
 
-* pip (apt-get install python-pip)
+* Python 3.4+
+* pip (Installed by default since Python 3.4)
 * Java JRE (Probably already installed but if not, apt-get install default-jre)
 
 ***Instructions***
@@ -133,4 +134,8 @@ That being said, I've tested the tool against the top 30 applications in the Pla
 * Android Hacker's Handbook (Book)
 * Android Security Internals (Book)
 * The Mobile Application Hacker's Handbook (Book)
+
+**Credits**
+
+Special thank you to @neskk for porting droidstax to support python3 and other improvements. 
 
