@@ -44,7 +44,7 @@ class App:
     xamarinBundledFile = ""
     isAppCordova = False
     isAppOutsystems = False
-    hasNetworkSecurityConfig = False
+    networkSecurityConfig = False
     minSDKVersion = ""
     targetSDKVersion = ""
     versionCode = ""
@@ -134,7 +134,7 @@ class App:
         else:
             self.allowBackup = True
         if self.application.get(self.NS_ANDROID + "networkSecurityConfig") is not None:
-            self.hasNetworkSecurityConfig = True
+            self.networkSecurityConfig = True
             self.parseNetworkSecurityConfigFile()
 
     def getAPKToolFolder(self):
@@ -236,30 +236,28 @@ class App:
         name = obj.get(self.NS_ANDROID + "name")
         filters = obj.findall("intent-filter")
         for filter in filters:
-            intentFilter = IntentFilter()
-            if len(filter.findall("action")) > 0:
-                for action in filter.findall("action"):
-                    intentFilter.addAction(action.get(self.NS_ANDROID + "name"))
-            if len(filter.findall("category")) > 0:
-                for category in filter.findall("category"):
-                    intentFilter.addCategory(category.get(self.NS_ANDROID + "name"))
-            if len(filter.findall("data")) > 0:
-                for data in filter.findall("data"):
-                    if data.get(self.NS_ANDROID + "scheme") is not None:
-                        intentFilter.addData("scheme:" + data.get(self.NS_ANDROID + "scheme"))
-                    if data.get(self.NS_ANDROID + "host") is not None:
-                        intentFilter.addData("host:" + data.get(self.NS_ANDROID + "host"))
-                    if data.get(self.NS_ANDROID + "port") is not None:
-                        intentFilter.addData("port:" + data.get(self.NS_ANDROID + "port"))
-                    if data.get(self.NS_ANDROID + "path") is not None:
-                        intentFilter.addData("path:" + data.get(self.NS_ANDROID + "path"))
-                    if data.get(self.NS_ANDROID + "pathPattern") is not None:
-                        intentFilter.addData("pathPattern:" + data.get(self.NS_ANDROID + "pathPattern"))
-                    if data.get(self.NS_ANDROID + "pathPrefix") is not None:
-                        intentFilter.addData("pathPrefix:" + data.get(self.NS_ANDROID + "pathPrefix"))
-                    if data.get(self.NS_ANDROID + "mimeType") is not None:
-                        intentFilter.addData("mimeType:" + data.get(self.NS_ANDROID + "mimeType"))
+            intentFilter = IntentFilter(name)
+            for action in filter.findall("action"):
+                intentFilter.addAction(action.get(self.NS_ANDROID + "name"))
+            for category in filter.findall("category"):
+                intentFilter.addCategory(category.get(self.NS_ANDROID + "name"))
+            for data in filter.findall("data"):
+                if data.get(self.NS_ANDROID + "scheme") is not None:
+                    intentFilter.addData("scheme:" + data.get(self.NS_ANDROID + "scheme"))
+                if data.get(self.NS_ANDROID + "host") is not None:
+                    intentFilter.addData("host:" + data.get(self.NS_ANDROID + "host"))
+                if data.get(self.NS_ANDROID + "port") is not None:
+                    intentFilter.addData("port:" + data.get(self.NS_ANDROID + "port"))
+                if data.get(self.NS_ANDROID + "path") is not None:
+                    intentFilter.addData("path:" + data.get(self.NS_ANDROID + "path"))
+                if data.get(self.NS_ANDROID + "pathPattern") is not None:
+                    intentFilter.addData("pathPattern:" + data.get(self.NS_ANDROID + "pathPattern"))
+                if data.get(self.NS_ANDROID + "pathPrefix") is not None:
+                    intentFilter.addData("pathPrefix:" + data.get(self.NS_ANDROID + "pathPrefix"))
+                if data.get(self.NS_ANDROID + "mimeType") is not None:
+                    intentFilter.addData("mimeType:" + data.get(self.NS_ANDROID + "mimeType"))
             filterList.append(intentFilter)
+
         self.intentFilterList[name] = filterList
 
     # Determine exported Activities taking into account the existence of exported attribute or the presence of intent-filters and also check for presence of secretCode and if vulnerable to Fragment Injection
@@ -457,7 +455,7 @@ class App:
             return "No"
 
     def hasNetworkSecurityConfig(self):
-        return self.hasNetworkSecurityConfig
+        return self.networkSecurityConfig
 
     def isMultiDex(self):
         if len(self.getDexFiles()) > 1:
