@@ -107,7 +107,7 @@ class App:
         print("   [-]Files")
         self.extractFiles()
 
-        print("Exporting analysis")
+        print("[-]Exporting analysis")
         self.exportAnalysis()
 
     # Return the Android Code Name for the particular Api Level.
@@ -686,7 +686,8 @@ class App:
             content.append(elem[0] + ": " + str(elem[1]))
 
         cwd = os.path.dirname(os.path.realpath(__file__))
-        filepath = os.path.join(cwd+ "/output_txt/" + self.packageName + ".txt")
+        filename = self.a.get_package() + "_" + self.a.get_androidversion_code() + ".txt"
+        filepath = os.path.join(cwd, "output_txt", filename)
         with open(filepath, "w") as file:
             file.truncate()
             for line in content:
