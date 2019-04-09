@@ -239,7 +239,7 @@ class App:
         name = obj.get(self.NS_ANDROID + "name")
         filters = obj.findall("intent-filter")
         for filter in filters:
-            intentFilter = IntentFilter(name)
+            intentFilter = IntentFilter()
             for action in filter.findall("action"):
                 intentFilter.addAction(action.get(self.NS_ANDROID + "name"))
             for category in filter.findall("category"):
@@ -624,52 +624,63 @@ class App:
             Popen(["gzip", "-d", "-f", f], stdout=PIPE, universal_newlines=True).wait()
 
     def getAnalysis(self):
-        return {
-            "permissions": sorted(self.permissions),
-            "exportedActivities": self.exportedActivities,
-            "exportedReceivers": self.exportedReceivers,
-            "exportedProviders": self.exportedProviders,
-            "exportedServices": self.exportedServices,
-            "packageName": self.packageName,
-            "minSDKVersion": self.minSDKVersion,
-            "targetSDKVersion": self.targetSDKVersion,
-            "versionName": self.versionName,
-            "versionCode": self.versionCode,
-            "sha256": self.sha256,
-            "isAppCordova": self.isAppCordova,
-            "isAppXamarin": self.isAppXamarin,
-            "xamarinMKBundled": self.xamarinMKBundled,
-            "isAppOutsystems": self.isAppOutsystems,
-            "debuggable": self.debuggable,
-            "allowBackup": self.allowBackup,
-            "networkSecurityConfig": self.networkSecurityConfig,
-            "isMultiDex": len(self.getDexFiles()) > 1,
-            "assets": self.assets,
-            "cordova": self.cordova,
-            "rawResources": self.rawResources,
-            "libs": self.libs,
-            "otherFiles": self.otherFiles,
-            "assemblies": self.assemblies,
-            "dexFiles": self.dexFiles,
-            "secretCodes": self.secretCodes,
-            "intentFilterList": sorted(self.intentFilterList),
-            "networkSecurityConfigDomains": self.networkSecurityConfigDomains,
-            "activitiesWithExcludeFromRecents": self.activitiesWithExcludeFromRecents,
-            "activitiesWithoutFlagSecure": self.activitiesWithoutFlagSecure,
-            "activitiesExtendPreferencesWithValidate": self.activitiesExtendPreferencesWithValidate,
-            "activitiesExtendPreferencesWithoutValidate": self.activitiesExtendPreferencesWithoutValidate,
-            "cordovaPlugins": self.cordovaPlugins
-        }
+        attrs = [
+            "permissions",
+            "exportedActivities",
+            "exportedReceivers",
+            "exportedProviders",
+            "exportedServices",
+            "packageName",
+            "minSDKVersion",
+            "targetSDKVersion",
+            "versionName",
+            "versionCode",
+            "sha256",
+            "isAppCordova",
+            "isAppXamarin",
+            "xamarinMKBundled",
+            "isAppOutsystems",
+            "debuggable",
+            "allowBackup",
+            "networkSecurityConfig",
+            "isMultiDex",
+            "assets",
+            "cordova",
+            "rawResources",
+            "libs",
+            "otherFiles",
+            "assemblies",
+            "dexFiles",
+            "secretCodes",
+            "intentFilterList",
+            "networkSecurityConfigDomains",
+            "activitiesWithExcludeFromRecents",
+            "activitiesWithoutFlagSecure",
+            "activitiesExtendPreferencesWithValidate",
+            "activitiesExtendPreferencesWithoutValidate",
+            "cordovaPlugins"
+        ]
+        data = {}
+        for attr in attrs:
+            value = getattr(self, attr)
+            if isinstance(value, list):
+                value = sorted(value)
+            elif callable(value):
+                value = value()
+
+            data[attr] = value
+
+        return data
 
     def exportAnalysis(self):
         content = []
-        analysis = self.getAnalysis()
-        for elem in sorted(analysis.items()):
-            content.append(elem[0] + " :: " + str(elem[1]))
+        data = self.getAnalysis()
+        for elem in sorted(data.items()):
+            content.append(elem[0] + ": " + str(elem[1]))
 
-        analysis = self.smaliChecks.getAnalysis()
-        for elem in sorted(analysis.items()):
-            content.append(elem[0] + " :: " + str(elem[1]))
+        data = self.smaliChecks.getAnalysis()
+        for elem in sorted(data.items()):
+            content.append(elem[0] + ": " + str(elem[1]))
 
         cwd = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(cwd+ "/output_txt/" + self.packageName + ".txt")

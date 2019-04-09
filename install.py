@@ -48,4 +48,4 @@ if __name__ == '__main__':
     with open(cwd + "/apktool.jar", 'wb') as f:
         f.write(data)
     parent = os.path.dirname(cwd)
-    os.system("pip install -r requirements.txt")
+    os.system("pip3 install -r requirements.txt --upgrade")
