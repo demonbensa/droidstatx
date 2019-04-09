@@ -54,6 +54,32 @@ class SmaliChecks:
         self.findDynamicRegisteredBroadcastReceivers()
         self.findPathTraversalContentProvider()
 
+    def getAnalysis(self):
+        return {
+            "vulnerableTrustManagers": self.vulnerableTrustManagers,
+            "vulnerableWebViewSSLErrorBypass": self.vulnerableWebViewSSLErrorBypass,
+            "vulnerableHostnameVerifiers": self.vulnerableHostnameVerifiers,
+            "encryptionFunctionsLocation": self.encryptionFunctionsLocation,
+            "decryptionFunctionsLocation": self.decryptionFunctionsLocation,
+            "undeterminedCryptographicFunctionsLocation": self.undeterminedCryptographicFunctionsLocation,
+            "vulnerableSetHostnameVerifiers": self.vulnerableSetHostnameVerifiers,
+            "vulnerableSocketsLocations": self.vulnerableSocketsLocations,
+            "webViewLoadUrlUsageLocation": self.webViewLoadUrlUsageLocation,
+            "webViewAddJavascriptInterfaceUsageLocation": self.webViewAddJavascriptInterfaceUsageLocation,
+            "AESwithECBLocations": self.AESwithECBLocations,
+            "DESLocations": self.DESLocations,
+            "javascriptEnabledWebviews": self.javascriptEnabledWebviews,
+            "fileAccessEnabledWebviews": self.fileAccessEnabledWebviews,
+            "universalAccessFromFileURLEnabledWebviewsLocations": self.universalAccessFromFileURLEnabledWebviewsLocations,
+            "okHttpCertificatePinningLocation": self.okHttpCertificatePinningLocation,
+            "customCertifificatePinningLocation": self.customCertifificatePinningLocation,
+            "keystoreLocations": self.keystoreLocations,
+            "dynamicRegisteredBroadcastReceiversLocations": self.dynamicRegisteredBroadcastReceiversLocations,
+            "vulnerableContentProvidersSQLiLocations": self.vulnerableContentProvidersSQLiLocations,
+            "vulnerableContentProvidersPathTraversalLocations": self.vulnerableContentProvidersPathTraversalLocations,
+            "customChecksLocations": self.customChecksLocations
+        }
+
     def getSmaliPaths(self):
         return self.smaliPaths
 

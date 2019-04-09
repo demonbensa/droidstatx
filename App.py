@@ -107,6 +107,9 @@ class App:
         print("   [-]Files")
         self.extractFiles()
 
+        print("Exporting analysis")
+        self.exportAnalysis()
+
     # Return the Android Code Name for the particular Api Level.
     def getCodeName(self, apiLevel):
         return self.codeNames[apiLevel]
@@ -619,3 +622,58 @@ class App:
                 dd = Popen(command, stderr=PIPE, universal_newlines=True).wait()
         for f in files:
             Popen(["gzip", "-d", "-f", f], stdout=PIPE, universal_newlines=True).wait()
+
+    def getAnalysis(self):
+        return {
+            "permissions": sorted(self.permissions),
+            "exportedActivities": self.exportedActivities,
+            "exportedReceivers": self.exportedReceivers,
+            "exportedProviders": self.exportedProviders,
+            "exportedServices": self.exportedServices,
+            "packageName": self.packageName,
+            "minSDKVersion": self.minSDKVersion,
+            "targetSDKVersion": self.targetSDKVersion,
+            "versionName": self.versionName,
+            "versionCode": self.versionCode,
+            "sha256": self.sha256,
+            "isAppCordova": self.isAppCordova,
+            "isAppXamarin": self.isAppXamarin,
+            "xamarinMKBundled": self.xamarinMKBundled,
+            "isAppOutsystems": self.isAppOutsystems,
+            "debuggable": self.debuggable,
+            "allowBackup": self.allowBackup,
+            "networkSecurityConfig": self.networkSecurityConfig,
+            "isMultiDex": len(self.getDexFiles()) > 1,
+            "assets": self.assets,
+            "cordova": self.cordova,
+            "rawResources": self.rawResources,
+            "libs": self.libs,
+            "otherFiles": self.otherFiles,
+            "assemblies": self.assemblies,
+            "dexFiles": self.dexFiles,
+            "secretCodes": self.secretCodes,
+            "intentFilterList": sorted(self.intentFilterList),
+            "networkSecurityConfigDomains": self.networkSecurityConfigDomains,
+            "activitiesWithExcludeFromRecents": self.activitiesWithExcludeFromRecents,
+            "activitiesWithoutFlagSecure": self.activitiesWithoutFlagSecure,
+            "activitiesExtendPreferencesWithValidate": self.activitiesExtendPreferencesWithValidate,
+            "activitiesExtendPreferencesWithoutValidate": self.activitiesExtendPreferencesWithoutValidate,
+            "cordovaPlugins": self.cordovaPlugins
+        }
+
+    def exportAnalysis(self):
+        content = []
+        analysis = self.getAnalysis()
+        for elem in sorted(analysis.items()):
+            content.append(elem[0] + " :: " + str(elem[1]))
+
+        analysis = self.smaliChecks.getAnalysis()
+        for elem in sorted(analysis.items()):
+            content.append(elem[0] + " :: " + str(elem[1]))
+
+        cwd = os.path.dirname(os.path.realpath(__file__))
+        filepath = os.path.join(cwd, "droidstatx-" + self.packageName + ".txt")
+        with open(filepath, "w") as file:
+            file.truncate()
+            for line in content:
+                file.write(line + "\n")
