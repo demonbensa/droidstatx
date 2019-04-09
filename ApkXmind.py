@@ -29,11 +29,10 @@ class ApkXmind:
             else:
                 self.sheet = self.workbook.createSheet()
                 self.sheet.setTitle(app.getVersionCode())
-                self.workbook.addSheet(self.sheet)
         else:
             self.sheet = self.workbook.createSheet()
             self.sheet.setTitle(app.getVersionCode())
-            self.workbook.addSheet(self.sheet)
+
         rootTopic = self.sheet.getRootTopic()
         rootTopic.setTitle(app.getPackageName())
         rootTopic.setStructureClass(self.configuration.geXmindTopicStructure())
