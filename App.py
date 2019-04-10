@@ -344,6 +344,11 @@ class App:
     def extractExportedProviders(self):
         for provider in self.application.findall("provider"):
             providerName = provider.get(self.NS_ANDROID + "name")
+
+            # Hack: some apps have their manifest with relative provider names
+            if providerName.startswith("."):
+                providerName = provider.get(self.NS_ANDROID + "authorities")
+
             self.checkForSecretCodes(provider)
             if provider.get(self.NS_ANDROID + "exported") == 'true':
                 self.exportedProviders.append(providerName)
