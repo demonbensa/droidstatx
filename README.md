@@ -20,12 +20,12 @@ You have two options. Use Docker with the provided docker file or use the follow
 
 * git clone https://github.com/clviper/droidstatx
 * cd droidstatx
-* python install.py
+* python3 install.py
   * The setup will download the latest jar version of apktool and pip install androguard and xmind-sdk-python. 
 
 **Usage**
 
-* python droidstatx.py --apk <apk>
+* python3 droidstatx.py --apk <apk>
 
 **Config File (droidstatx.config)**
 

@@ -100,7 +100,9 @@ class ApkXmind:
         sst.setTitle(self.app.isXamarin())
 
         if self.app.isXamarin() == "Yes":
-            sst.addSubTopic().setTitle("Bundled?").addSubTopic().setTitle(self.app.isXamarinBundled())
+            bundled = sst.addSubTopic()
+            bundled.setTitle("Bundled?")
+            bundled.addSubTopic().setTitle(self.app.isXamarinBundled())
 
         st = propertiesTopic.addSubTopic()
         st.setTitle("Cordova")
@@ -108,7 +110,8 @@ class ApkXmind:
         sst.setTitle(self.app.isCordova())
 
         if self.app.isCordova() == "Yes" and len(self.app.getCordovaPlugins()) > 0:
-            plugins = sst.addSubTopic().setTitle("Plugins")
+            plugins = sst.addSubTopic()
+            plugins.setTitle("Plugins")
             self.createSubTopics(plugins, self.app.getCordovaPlugins())
 
         st = propertiesTopic.addSubTopic()
@@ -163,13 +166,16 @@ class ApkXmind:
                     st = topicElement.addSubTopic()
                     sst.setTitle("Intent Filter " + str(i))
                     i += 1
-                    action = st.addSubTopic().setTitle("Action")
+                    action = st.addSubTopic()
+                    action.setTitle("Action")
                     self.createSubTopics(action, filter.getActionList())
 
-                    category = st.addSubTopic().setTitle("Categories")
+                    category = st.addSubTopic()
+                    category.setTitle("Categories")
                     self.createSubTopics(category, filter.getCategoryList())
 
-                    data = st.addSubTopic().setTitle("Data")
+                    data = st.addSubTopic()
+                    data.setTitle("Data")
                     self.createSubTopics(data, filter.getDataList())
 
                     st.setFolded()
@@ -194,13 +200,16 @@ class ApkXmind:
                     st = topicElement.addSubTopic()
                     sst.setTitle("Intent Filter " + str(i))
                     i += 1
-                    action = st.addSubTopic().setTitle("Action")
+                    action = st.addSubTopic()
+                    action.setTitle("Action")
                     self.createSubTopics(action, filter.getActionList())
 
-                    category = st.addSubTopic().setTitle("Categories")
+                    category = st.addSubTopic()
+                    category.setTitle("Categories")
                     self.createSubTopics(category, filter.getCategoryList())
 
-                    data = st.addSubTopic().setTitle("Data")
+                    data = st.addSubTopic()
+                    data.setTitle("Data")
                     self.createSubTopics(data, filter.getDataList())
 
                     st.setFolded()
@@ -233,13 +242,16 @@ class ApkXmind:
                     st = topicElement.addSubTopic()
                     sst.setTitle("Intent Filter " + str(i))
                     i += 1
-                    action = st.addSubTopic().setTitle("Action")
+                    action = st.addSubTopic()
+                    action.setTitle("Action")
                     self.createSubTopics(action, filter.getActionList())
 
-                    category = st.addSubTopic().setTitle("Categories")
+                    category = st.addSubTopic()
+                    category.setTitle("Categories")
                     self.createSubTopics(category, filter.getCategoryList())
 
-                    data = st.addSubTopic().setTitle("Data")
+                    data = st.addSubTopic()
+                    data.setTitle("Data")
                     self.createSubTopics(data, filter.getDataList())
 
                     st.setFolded()
@@ -264,13 +276,16 @@ class ApkXmind:
                     st = topicElement.addSubTopic()
                     sst.setTitle("Intent Filter " + str(i))
                     i += 1
-                    action = st.addSubTopic().setTitle("Action")
+                    action = st.addSubTopic()
+                    action.setTitle("Action")
                     self.createSubTopics(action, filter.getActionList())
 
-                    category = st.addSubTopic().setTitle("Categories")
+                    category = st.addSubTopic()
+                    category.setTitle("Categories")
                     self.createSubTopics(category, filter.getCategoryList())
 
-                    data = st.addSubTopic().setTitle("Data")
+                    data = st.addSubTopic()
+                    data.setTitle("Data")
                     self.createSubTopics(data, filter.getDataList())
 
                     st.setFolded()

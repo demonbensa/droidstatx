@@ -4,23 +4,13 @@ class IntentFilter:
     categoryList = []
     dataList = []
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
         self.actionList = []
         self.categoryList = []
         self.dataList = []
 
-    def __cmp__(self, other):
-        if self.name < other.name:
-            return -1
-        elif self.name > other.name:
-            return 1
-        else:
-            return 0
-
     def __repr__(self):
-        return "Intent {} [action: {}] [category: {}] [data: {}]".format(
-            self.name,
+        return "IntentFilter [action: {}] [category: {}] [data: {}]".format(
             ", ".join(self.actionList),
             ", ".join(self.categoryList),
             ", ".join(self.dataList))

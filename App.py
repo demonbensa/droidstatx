@@ -107,7 +107,7 @@ class App:
         print("   [-]Files")
         self.extractFiles()
 
-        print("Exporting analysis")
+        print("[-]Exporting analysis")
         self.exportAnalysis()
 
     # Return the Android Code Name for the particular Api Level.
@@ -215,11 +215,22 @@ class App:
                     if data.get(self.NS_ANDROID + "scheme") == "android_secret_code":
                         self.secretCodes.append(data.get(self.NS_ANDROID + "host"))
 
-    # Create a global list of activities with the excludeFromRecentes attribute
+    # Create a global list of activities with the excludeFromRecents attribute
     def extractActivitiesWithExcludeFromRecents(self):
         for activity in self.application.findall("activity"):
             if activity.get(self.NS_ANDROID + "excludeFromRecents") == 'true':
-                self.activitiesWithExcludeFromRecents.append(activity)
+                self.activitiesWithExcludeFromRecents.append(activity.get(self.NS_ANDROID + "name"))
+
+    # Create a global list of activities that do not have the FLAG_SECURE or the excludeFromRecents attribute set.
+    def extractActivitiesWithoutSecureFlag(self):
+        activitiesWithoutSecureFlag = []
+        for activity in self.a.get_activities():
+            if self.smaliChecks.doesActivityHasFlagSecure(activity) is False and activity not in self.getActivitiesWithExcludeFromRecents():
+                try:
+                    activity.encode("ascii")
+                except UnicodeEncodeError as e:
+                    activity = activity.encode('ascii', 'xmlcharrefreplace')
+                self.activitiesWithoutFlagSecure.append(activity)
 
     # Return the ProtectionLevel of a particular Permission
     def determinePermissionProtectionLevel(self, targetPermission):
@@ -239,7 +250,7 @@ class App:
         name = obj.get(self.NS_ANDROID + "name")
         filters = obj.findall("intent-filter")
         for filter in filters:
-            intentFilter = IntentFilter(name)
+            intentFilter = IntentFilter()
             for action in filter.findall("action"):
                 intentFilter.addAction(action.get(self.NS_ANDROID + "name"))
             for category in filter.findall("category"):
@@ -546,17 +557,6 @@ class App:
         except UnicodeDecodeError as e:
             pass
 
-    # Create a global list of activities that do not have the FLAG_SECURE or the excludeFromRecents attribute set.
-    def extractActivitiesWithoutSecureFlag(self):
-        activitiesWithoutSecureFlag = []
-        for activity in self.a.get_activities():
-            if self.smaliChecks.doesActivityHasFlagSecure(activity) is False and activity not in self.getActivitiesWithExcludeFromRecents():
-                try:
-                    activity.encode("ascii")
-                except UnicodeEncodeError as e:
-                    activity = activity.encode('ascii', 'xmlcharrefreplace')
-                self.activitiesWithoutFlagSecure.append(activity)
-
     def getActivitiesWithExcludeFromRecents(self):
         return self.activitiesWithExcludeFromRecents
 
@@ -580,7 +580,7 @@ class App:
 
     def bakmali(self, apkFile):
         cwd = os.path.dirname(os.path.realpath(__file__))
-        apktool = Popen(["java", "-jar", cwd + "/apktool.jar", "d", "-b", "-f", "--frame-path", "/tmp/", apkFile, "-o", self.getAPKToolFolder() + "/"], stdout=PIPE, universal_newlines=True)
+        apktool = Popen(["java", "-Xms64m", "-Xmx1024m", "-jar", cwd + "/apktool.jar", "d", "-b", "-f", "--frame-path", "/tmp/", apkFile, "-o", self.getAPKToolFolder() + "/"], stdout=PIPE, universal_newlines=True)
         output = apktool.communicate()[0]
         print(output)
         numberOfDexFiles = output.count("Baksmaling")
@@ -624,55 +624,70 @@ class App:
             Popen(["gzip", "-d", "-f", f], stdout=PIPE, universal_newlines=True).wait()
 
     def getAnalysis(self):
-        return {
-            "permissions": sorted(self.permissions),
-            "exportedActivities": self.exportedActivities,
-            "exportedReceivers": self.exportedReceivers,
-            "exportedProviders": self.exportedProviders,
-            "exportedServices": self.exportedServices,
-            "packageName": self.packageName,
-            "minSDKVersion": self.minSDKVersion,
-            "targetSDKVersion": self.targetSDKVersion,
-            "versionName": self.versionName,
-            "versionCode": self.versionCode,
-            "sha256": self.sha256,
-            "isAppCordova": self.isAppCordova,
-            "isAppXamarin": self.isAppXamarin,
-            "xamarinMKBundled": self.xamarinMKBundled,
-            "isAppOutsystems": self.isAppOutsystems,
-            "debuggable": self.debuggable,
-            "allowBackup": self.allowBackup,
-            "networkSecurityConfig": self.networkSecurityConfig,
-            "isMultiDex": len(self.getDexFiles()) > 1,
-            "assets": self.assets,
-            "cordova": self.cordova,
-            "rawResources": self.rawResources,
-            "libs": self.libs,
-            "otherFiles": self.otherFiles,
-            "assemblies": self.assemblies,
-            "dexFiles": self.dexFiles,
-            "secretCodes": self.secretCodes,
-            "intentFilterList": sorted(self.intentFilterList),
-            "networkSecurityConfigDomains": self.networkSecurityConfigDomains,
-            "activitiesWithExcludeFromRecents": self.activitiesWithExcludeFromRecents,
-            "activitiesWithoutFlagSecure": self.activitiesWithoutFlagSecure,
-            "activitiesExtendPreferencesWithValidate": self.activitiesExtendPreferencesWithValidate,
-            "activitiesExtendPreferencesWithoutValidate": self.activitiesExtendPreferencesWithoutValidate,
-            "cordovaPlugins": self.cordovaPlugins
-        }
+        attrs = [
+            "permissions",
+            "exportedActivities",
+            "exportedReceivers",
+            "exportedProviders",
+            "exportedServices",
+            "packageName",
+            "minSDKVersion",
+            "targetSDKVersion",
+            "versionName",
+            "versionCode",
+            "sha256",
+            "isAppCordova",
+            "isAppXamarin",
+            "xamarinMKBundled",
+            "isAppOutsystems",
+            "debuggable",
+            "allowBackup",
+            "networkSecurityConfig",
+            "isMultiDex",
+            "assets",
+            "cordova",
+            "rawResources",
+            "libs",
+            "otherFiles",
+            "assemblies",
+            "dexFiles",
+            "secretCodes",
+            "intentFilterList",
+            "networkSecurityConfigDomains",
+            "activitiesWithExcludeFromRecents",
+            "activitiesWithoutFlagSecure",
+            "activitiesExtendPreferencesWithValidate",
+            "activitiesExtendPreferencesWithoutValidate",
+            "cordovaPlugins"
+        ]
+        data = {}
+        for attr in attrs:
+            value = getattr(self, attr)
+            if isinstance(value, list):
+                try:
+                    value = sorted(value)
+                except TypeError:
+                    pass
+            elif callable(value):
+                value = value()
+
+            data[attr] = value
+
+        return data
 
     def exportAnalysis(self):
         content = []
-        analysis = self.getAnalysis()
-        for elem in sorted(analysis.items()):
-            content.append(elem[0] + " :: " + str(elem[1]))
+        data = self.getAnalysis()
+        for elem in sorted(data.items()):
+            content.append(elem[0] + ": " + str(elem[1]))
 
-        analysis = self.smaliChecks.getAnalysis()
-        for elem in sorted(analysis.items()):
-            content.append(elem[0] + " :: " + str(elem[1]))
+        data = self.smaliChecks.getAnalysis()
+        for elem in sorted(data.items()):
+            content.append(elem[0] + ": " + str(elem[1]))
 
         cwd = os.path.dirname(os.path.realpath(__file__))
-        filepath = os.path.join(cwd+ "/output_txt/" + self.packageName + ".txt")
+        filename = self.a.get_package() + "_" + self.a.get_androidversion_code() + ".txt"
+        filepath = os.path.join(cwd, "output_txt", filename)
         with open(filepath, "w") as file:
             file.truncate()
             for line in content:

@@ -3,4 +3,6 @@
 *.jar
 .vscode/
 output_apktool/
+output_dlls/
+output_txt/
 output_xmind/
