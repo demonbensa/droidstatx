@@ -14,7 +14,7 @@ RUN apt-get update \
 
 
 RUN cd /app/ \
-    && python install.py \
+    && python3 install.py \
     && chmod u+x /app/droidstatx.py
 
-CMD ["python","/app/droidstatx.py"]
+CMD ["python3","/app/droidstatx.py"]
