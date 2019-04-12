@@ -52,7 +52,7 @@ class SmaliChecks:
         self.checkCustomPinningImplementation()
         self.findKeystoreUsage()
         self.findDynamicRegisteredBroadcastReceivers()
-        self.findPathTraversalContentProvider()
+        # self.findPathTraversalContentProvider()
         self.findCustomChecks()
 
     def getAnalysis(self):
@@ -318,6 +318,7 @@ class SmaliChecks:
 
     # *** Improper Platform Usage ***
 
+    # XXX: Unused
     def findPathTraversalContentProvider(self):
         contentProvidersLocations = self.checkForExistenceInFolder(".super Landroid\/content\/ContentProvider;", self.getSmaliPaths())
         if contentProvidersLocations[0] != '':
