@@ -138,19 +138,33 @@ class App:
             self.allowBackup = True
         if self.application.get(self.NS_ANDROID + "networkSecurityConfig") is not None:
             self.networkSecurityConfig = True
-            self.parseNetworkSecurityConfigFile()
+            self.parseNetworkSecurityConfigFiles()
 
     def getAPKToolFolder(self):
         cwd = os.path.dirname(os.path.realpath(__file__))
         return cwd + "/output_apktool/" + self.a.get_package() + "_" + self.a.get_androidversion_code()
 
-    def parseNetworkSecurityConfigFile(self):
-        cwd = os.path.dirname(os.path.realpath(__file__))
-        networkSecurityConfigPath = self.getAPKToolFolder() + "/res/xml/network_security_config.xml"
-        tree = ET.parse(networkSecurityConfigPath)
-        root = tree.getroot()
+    def parseNetworkSecurityConfigFiles(self):
+        xml_path = os.path.join(self.getAPKToolFolder(), "res/xml")
+        config_file = os.path.join(xml_path, "network_security_config.xml")
+
+        xml_files = []
+        if os.path.isfile(config_file):
+            xml_files.append(config_file)
+        elif os.path.isdir(xml_path):
+            for root, dirs, files in os.walk(xml_path):
+                xml_files = [os.path.join(root, f) for f in files if f.endswith(".xml")]
+
+        for file_path in xml_files:
+            tree = ET.parse(file_path)
+            root = tree.getroot()
+            self.parseNetworkSecurityConfigFile(root)
+
+    def parseNetworkSecurityConfigFile(self, root):
+        foundConfig = False
+
         for child in root:
-            if child.tag == "base-config":
+            if child.tag == "base-config" or child.tag == "domain-config":
                 domainConfig = {
                     'domains': [],
                     'allowClearText': True,
@@ -173,29 +187,9 @@ class App:
                         if 'expiration' in sub.attrib:
                             domainConfig['pinningExpiration'] = sub.attrib['expiration']
                 self.networkSecurityConfigDomains.append(domainConfig)
-            if child.tag == "domain-config":
-                domainConfig = {
-                    'domains': [],
-                    'allowClearText': True,
-                    'allowUserCA': False,
-                    'pinning': False,
-                    'pinningExpiration': ''
-                }
-                if 'cleartextTrafficPermitted' in child.attrib:
-                    if child.attrib['cleartextTrafficPermitted'] == "false":
-                        domainConfig['allowClearText'] = False
-                for sub in child:
-                    if sub.tag == "domain":
-                        domainConfig['domains'].append(sub.text)
-                    if sub.tag == "trust-anchors":
-                        for certificates in sub:
-                            if certificates.attrib['src'] == "user":
-                                domainConfig['allowUserCA'] = True
-                    if sub.tag == "pin-set":
-                        domainConfig['pinning'] = True
-                        if 'expiration' in sub.attrib:
-                            domainConfig['pinningExpiration'] = sub.attrib['expiration']
-                self.networkSecurityConfigDomains.append(domainConfig)
+                foundConfig = True
+
+        return foundConfig
 
     # Create the list of permissions used by the package
     def extractPermissions(self):
