@@ -92,7 +92,7 @@ class App:
         print("[-]Parsing APK")
         self.a = apk.APK(apkFile)
         print("[-]Baksmaling DEX files")
-        self.bakmali(apkFile)
+        self.baksmali(apkFile)
         self.manifest = self.a.get_android_manifest_axml().get_xml_obj()
         self.application = self.manifest.findall("application")[0]
         print("[+]Gathering Information")
@@ -577,7 +577,7 @@ class App:
     # -f : Force rewrite
     # -o : Output folder
 
-    def bakmali(self, apkFile):
+    def baksmali(self, apkFile):
         cwd = os.path.dirname(os.path.realpath(__file__))
         apktool = Popen(["java", "-Xms64m", "-Xmx1024m", "-jar", cwd + "/apktool.jar", "d", "-b", "-f", "--frame-path", "/tmp/", apkFile, "-o", self.getAPKToolFolder() + "/"], stdout=PIPE, universal_newlines=True)
         output = apktool.communicate()[0]
