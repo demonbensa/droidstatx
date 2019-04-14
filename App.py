@@ -291,7 +291,7 @@ class App:
                             activityName.encode("ascii")
                         except UnicodeEncodeError as e:
                             activityName = activityName.encode('ascii', 'xmlcharrefreplace')
-                        self.activitiesExtendPreferencesWithoutValidateValidate.append(activityName)
+                        self.activitiesExtendPreferencesWithoutValidate.append(activityName)
                 self.exportedActivities.append(activityName)
                 if "com.outsystems.android" in activityName:
                     self.isAppOutsystems = True
