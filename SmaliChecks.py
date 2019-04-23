@@ -52,7 +52,7 @@ class SmaliChecks:
         self.checkCustomPinningImplementation()
         self.findKeystoreUsage()
         self.findDynamicRegisteredBroadcastReceivers()
-        self.findPathTraversalContentProvider()
+        # self.findPathTraversalContentProvider()
         self.findCustomChecks()
 
     def getAnalysis(self):
@@ -118,6 +118,7 @@ class SmaliChecks:
         else:
             return False
 
+    # Note: returns [''] if method not found
     def getMethodCompleteInstructions(self, methodRegEx, filePath):
         sed = Popen(["sed", "-n", methodRegEx, filePath], stdout=PIPE, universal_newlines=True)
         methodContent = sed.communicate()[0]
@@ -270,13 +271,10 @@ class SmaliChecks:
 
     def findInstructionIndex(self, instructionsList, instructionToSearch):
         indexList = []
+        regex = re.compile(instructionToSearch)
         for index, instruction in enumerate(instructionsList):
-            m = re.search(instructionToSearch, instruction)
-            try:
-                output = m.group(0)
+            if re.search(regex, instruction):
                 indexList.append(index)
-            except:
-                continue
         return indexList
 
     def findDynamicRegisteredBroadcastReceivers(self):
@@ -284,7 +282,8 @@ class SmaliChecks:
             ";->registerReceiver\(Landroid\/content\/BroadcastReceiver;Landroid\/content\/IntentFilter;\)",
             self.getSmaliPaths())
         for location in dynamicRegisteredBroadcastReceiversLocations:
-            self.dynamicRegisteredBroadcastReceiversLocations.append(location)
+            if location:
+                self.dynamicRegisteredBroadcastReceiversLocations.append(location)
 
     def findEncryptionFunctions(self):
         encryptionFunctionsLocations = self.checkForExistenceInFolder("invoke-virtual {(.*)}, Ljavax\/crypto\/Cipher;->init\(ILjava\/security\/Key", self.getSmaliPaths())
@@ -319,6 +318,7 @@ class SmaliChecks:
 
     # *** Improper Platform Usage ***
 
+    # XXX: Unused
     def findPathTraversalContentProvider(self):
         contentProvidersLocations = self.checkForExistenceInFolder(".super Landroid\/content\/ContentProvider;", self.getSmaliPaths())
         if contentProvidersLocations[0] != '':
@@ -329,18 +329,29 @@ class SmaliChecks:
                     indexList = self.findInstructionIndex(instructions, "")
 
     def determineContentProviderPathTraversal(self, provider):
-        provider = provider.replace("$", "\$")
-        location = self.checkForExistenceInFolder(".class .* L" + provider.replace(".", "/"), self.getSmaliPaths())
+        provider = provider.replace("$", "\$").replace(".", "\/")
+
+        location = self.checkForExistenceInFolder(".class (.*) L" + provider, self.getSmaliPaths())
+        if not location:
+            return
+
         instructions = self.getMethodCompleteInstructions('/.method public openFile(Landroid\/net\/Uri;Ljava\/lang\/String;)Landroid\/os\/ParcelFileDescriptor;/,/^.end method/p', location[0])
+        if not instructions or instructions[0] == "":
+            return
         indexList = self.findInstructionIndex(instructions, "Ljava\/io\/File;->getCanonicalPath\(\)")
-        if len(indexList) > 0:
+        # If a file is being loaded with getCanonicalPath(), then it is probably safe
+        if not indexList:
             self.vulnerableContentProvidersPathTraversalLocations.append(location[0])
 
     def determineContentProviderSQLi(self, provider):
-        provider = provider.replace("$", "\$")
-        location = self.checkForExistenceInFolder(".class .* L" + provider.replace(".", "/"), self.getSmaliPaths())
+        provider = provider.replace("$", "\$").replace(".", "\/")
+        location = self.checkForExistenceInFolder(".class (.*) L" + provider, self.getSmaliPaths())
+        if not location:
+            return
+
         instructions = self.getMethodCompleteInstructions('/.method public query(Landroid\/net\/Uri;\[Ljava\/lang\/String;Ljava\/lang\/String;\[Ljava\/lang\/String;Ljava\/lang\/String;)Landroid\/database\/Cursor;/,/^.end method/p', location[0])
         indexList = self.findInstructionIndex(instructions, "invoke-virtual(.*) {(.*)}, Landroid\/database\/sqlite\/SQLiteDatabase;->query")
+        indexList.extend(self.findInstructionIndex(instructions, "invoke-virtual(.*) {(.*)}, Landroid\/database\/sqlite\/SQLiteQueryBuilder;->query\(Landroid/database/sqlite/SQLiteDatabase;"))
         if len(indexList) > 0:
             indexList = self.findInstructionIndex(instructions, "\?")
             if len(indexList) == 0:
