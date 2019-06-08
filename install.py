@@ -48,4 +48,5 @@ if __name__ == '__main__':
     with open(cwd + "/apktool.jar", 'wb') as f:
         f.write(data)
     parent = os.path.dirname(cwd)
-    os.system("pip3 install -r requirements.txt --upgrade")
+    os.system("cd "+cwd+" && git clone https://github.com/androguard/androguard.git && cd "+cwd+"/androguard && python3 setup.py install")
+    os.system("cd "+cwd+" && git clone https://github.com/neskk/xmind-sdk-python3.git && cd "+cwd+"/xmind-sdk-python3 && python3 setup.py install")
