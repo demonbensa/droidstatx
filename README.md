@@ -13,7 +13,7 @@ You have two options. Use Docker with the provided docker file or use the follow
 ***Pre-requisites***
 
 * Python 3.4+
-* pip (Installed by default since Python 3.4)
+* pip
 * Java JRE (Probably already installed but if not, apt-get install default-jre)
 
 ***Instructions***
@@ -21,7 +21,7 @@ You have two options. Use Docker with the provided docker file or use the follow
 * git clone https://github.com/clviper/droidstatx
 * cd droidstatx
 * python3 install.py
-  * The setup will download the latest jar version of apktool and pip install androguard and xmind-sdk-python. 
+  * The setup will download the latest jar version of apktoo, install androguard and xmind-sdk-python. 
 
 **Usage**
 
