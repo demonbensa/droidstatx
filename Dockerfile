@@ -1,7 +1,7 @@
 FROM python:3.6
 
 RUN mkdir -p /app
-COPY *.py droidstatx.config requirements.txt /app/
+COPY *.py droidstatx.config /app/
 WORKDIR /app
 
 # update and install jre
