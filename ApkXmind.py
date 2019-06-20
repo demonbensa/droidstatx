@@ -18,7 +18,7 @@ class ApkXmind:
         versionAlreadyExists = False
         self.app = app
         cwd = os.path.dirname(os.path.realpath(__file__)) + "/output_xmind/"
-        print("[-]Generating Xmind")
+        print("[-] Generating Xmind")
         # load an existing file or create a new workbook if nothing is found
         self.workbook = xmind.load(cwd + app.getPackageName() + ".xmind")
 
