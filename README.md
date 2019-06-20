@@ -25,7 +25,7 @@ You have two options. Use Docker with the provided docker file or use the follow
 
 **Usage**
 
-* python3 droidstatx.py --apk <apk>
+* python3 droidstatx.py --apk <apk> | --package <packagename>
 
 **Config File (droidstatx.config)**
 
