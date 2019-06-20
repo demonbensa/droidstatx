@@ -74,7 +74,8 @@ class App:
         "25": "Nougat 7.1",
         "26": "Oreo 8.0",
         "27": "Oreo 8.1.0",
-        "28": "P "
+        "28": "Pie 9",
+        "29": "Q"
     }
     sha256 = ""
     packageName = ""
@@ -89,25 +90,25 @@ class App:
 
     def __init__(self, apkFile):
         self.sha256 = self.sha256CheckSum(apkFile)
-        print("[-]Parsing APK")
+        print("[-] Parsing APK")
         self.a = apk.APK(apkFile)
-        print("[-]Baksmaling DEX files")
+        print("[-] Baksmaling DEX files")
         self.baksmali(apkFile)
         self.manifest = self.a.get_android_manifest_axml().get_xml_obj()
         self.application = self.manifest.findall("application")[0]
-        print("[+]Gathering Information")
+        print("[+] Gathering Information")
         self.extractActivitiesWithExcludeFromRecents()
         self.extractActivitiesWithoutSecureFlag()
-        print("   [-]Package Properties")
+        print("   [-] Package Properties")
         self.extractPackageProperties()
-        print("   [-]Exported Components")
+        print("   [-] Exported Components")
         self.extractExportedComponents()
-        print("   [-]Permissions")
+        print("   [-] Permissions")
         self.extractPermissions()
-        print("   [-]Files")
+        print("   [-] Files")
         self.extractFiles()
 
-        print("[-]Exporting analysis")
+        print("[-] Exporting analysis")
         self.exportAnalysis()
 
     # Return the Android Code Name for the particular Api Level.
@@ -573,15 +574,13 @@ class App:
 
     # Run apktool on the package with the options
     # d : Decompile
-    # -b : Don't write out debug info
     # -f : Force rewrite
     # -o : Output folder
 
     def baksmali(self, apkFile):
         cwd = os.path.dirname(os.path.realpath(__file__))
-        apktool = Popen(["java", "-Xms64m", "-Xmx1024m", "-jar", cwd + "/apktool.jar", "d", "-b", "-f", "--frame-path", "/tmp/", apkFile, "-o", self.getAPKToolFolder() + "/"], stdout=PIPE, universal_newlines=True)
+        apktool = Popen(["java", "-Xms64m", "-Xmx1024m", "-jar", cwd + "/apktool.jar", "d", "-f", "--frame-path", "/tmp/", apkFile, "-o", self.getAPKToolFolder() + "/"], stdout=PIPE, universal_newlines=True)
         output = apktool.communicate()[0]
-        print(output)
         numberOfDexFiles = output.count("Baksmaling")
         if numberOfDexFiles > 1:
             path = self.getAPKToolFolder() + "/smali/"
