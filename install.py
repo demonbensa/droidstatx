@@ -48,5 +48,13 @@ if __name__ == '__main__':
     with open(cwd + "/apktool.jar", 'wb') as f:
         f.write(data)
     parent = os.path.dirname(cwd)
-    os.system("cd "+cwd+" && git clone https://github.com/androguard/androguard.git && cd "+cwd+"/androguard && python3 setup.py install")
-    os.system("cd "+cwd+" && git clone https://github.com/neskk/xmind-sdk-python3.git && cd "+cwd+"/xmind-sdk-python3 && python3 setup.py install")
+
+    if not os.path.exists(cwd+"/androguard"):
+        os.system("cd "+cwd+" && git clone https://github.com/androguard/androguard.git && cd "+cwd+"/androguard && python3 setup.py install")
+    else:
+        os.system("cd "+cwd+"/androguard && git pull && python3 setup.py install")
+
+    if not os.path.exists(cwd+"/xmind-sdk-python3"):
+        os.system("cd "+cwd+" && git clone https://github.com/neskk/xmind-sdk-python3.git && cd "+cwd+"/xmind-sdk-python3 && python3 setup.py install")
+    else:
+        os.system("cd "+cwd+"/xmind-sdk-python3 && git pull && python3 setup.py install")
