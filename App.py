@@ -43,6 +43,7 @@ class App:
     xamarinMKBundled = False
     xamarinBundledFile = ""
     isAppCordova = False
+    isAppReactNative = False
     isAppOutsystems = False
     networkSecurityConfig = False
     minSDKVersion = ""
@@ -438,6 +439,12 @@ class App:
         else:
             return "No"
 
+    def isReactNative(self):
+        if self.isAppReactNative is True:
+            return "Yes"
+        else:
+            return "No"
+
     def isXamarin(self):
         if self.isAppXamarin is True:
             return "Yes"
@@ -515,7 +522,7 @@ class App:
                 return True
         return False
 
-    # Create a list of files, organized in several types and while doing it, by the existence of certain files, determine if the app is a Cordova or Xamarin app.
+    # Create a list of files, organized in several types and while doing it, by the existence of certain files, determine if the app is a Cordova, Xamarin or React app.
     def extractFiles(self):
         files = self.a.get_files()
         try:
@@ -525,7 +532,9 @@ class App:
                         f.encode("ascii")
                     except UnicodeEncodeError as e:
                         f = f.encode('ascii', 'xmlcharrefreplace')
-                    if "assets/www/" in f:
+                    if "assets/index.android.bundle" in f:
+                        self.isAppReactNative = True    
+                    elif "assets/www/" in f:
                         if "assets/www/cordova.js" in f:
                             self.isAppCordova = True
                         if "assets/www/plugins/" in f:
@@ -636,6 +645,8 @@ class App:
             "sha256",
             "isAppCordova",
             "isAppXamarin",
+            "isAppOutsystems",
+            "isAppReactNative",
             "xamarinMKBundled",
             "isAppOutsystems",
             "debuggable",

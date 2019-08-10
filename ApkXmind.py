@@ -71,52 +71,56 @@ class ApkXmind:
         propertiesTopic = informationGatheringTopic.addSubTopic()
         propertiesTopic.setTitle("Properties")
 
-        st = propertiesTopic.addSubTopic()
-        st.setTitle("Version Name")
-        st.addSubTopic().setTitle(self.app.getVersionName())
+        versionNameSubTopic = propertiesTopic.addSubTopic()
+        versionNameSubTopic.setTitle("Version Name")
+        versionNameSubTopic.addSubTopic().setTitle(self.app.getVersionName())
 
-        st = propertiesTopic.addSubTopic()
-        st.setTitle("Version Code")
-        st.addSubTopic().setTitle(self.app.getVersionCode())
+        versionCodeSubTopic = propertiesTopic.addSubTopic()
+        versionCodeSubTopic.setTitle("Version Code")
+        versionCodeSubTopic.addSubTopic().setTitle(self.app.getVersionCode())
 
-        st = propertiesTopic.addSubTopic()
-        st.setTitle("SHA 256")
-        st.addSubTopic().setTitle(self.app.getSHA256())
+        shaSubTopic = propertiesTopic.addSubTopic()
+        shaSubTopic.setTitle("SHA 256")
+        shaSubTopic.addSubTopic().setTitle(self.app.getSHA256())
 
-        st = propertiesTopic.addSubTopic()
-        st.setTitle("Minimum SDK Version")
-        st.addSubTopic().setTitle(self.app.getMinSDKVersion() + " ( " + self.app.getCodeName(self.app.getMinSDKVersion()) + ")")
+        minimumSdkSubTopic = propertiesTopic.addSubTopic()
+        minimumSdkSubTopic.setTitle("Minimum SDK Version")
+        minimumSdkSubTopic.addSubTopic().setTitle(self.app.getMinSDKVersion() + " ( " + self.app.getCodeName(self.app.getMinSDKVersion()) + ")")
 
-        st = propertiesTopic.addSubTopic()
-        st.setTitle("Target SDK Version")
+        targetSdkSubTopic = propertiesTopic.addSubTopic()
+        targetSdkSubTopic.setTitle("Target SDK Version")
         if self.app.getTargetSDKVersion() is None:
-            st.addSubTopic().setTitle("Not defined")
+            targetSdkSubTopic.addSubTopic().setTitle("Not defined")
         else:
-            st.addSubTopic().setTitle(self.app.getTargetSDKVersion() + " ( " + self.app.getCodeName(self.app.getTargetSDKVersion()) + ")")
+            targetSdkSubTopic.addSubTopic().setTitle(self.app.getTargetSDKVersion() + " ( " + self.app.getCodeName(self.app.getTargetSDKVersion()) + ")")
 
-        st = propertiesTopic.addSubTopic()
-        st.setTitle("Xamarin")
-        sst = st.addSubTopic()
-        sst.setTitle(self.app.isXamarin())
+        xamarinSubTopic = propertiesTopic.addSubTopic()
+        xamarinSubTopic.setTitle("Xamarin")
+        xamarinSubTopicValue = xamarinSubTopic.addSubTopic()
+        xamarinSubTopicValue.setTitle(self.app.isXamarin())
 
         if self.app.isXamarin() == "Yes":
-            bundled = sst.addSubTopic()
-            bundled.setTitle("Bundled?")
-            bundled.addSubTopic().setTitle(self.app.isXamarinBundled())
+            bundledSubTopic = xamarinSubTopicValue.addSubTopic()
+            bundledSubTopic.setTitle("Bundled?")
+            bundledSubTopic.addSubTopic().setTitle(self.app.isXamarinBundled())
 
-        st = propertiesTopic.addSubTopic()
-        st.setTitle("Cordova")
-        sst = st.addSubTopic()
-        sst.setTitle(self.app.isCordova())
+        cordovaSubTopic = propertiesTopic.addSubTopic()
+        cordovaSubTopic.setTitle("Cordova")
+        cordovaSubTopicValue = cordovaSubTopic.addSubTopic()
+        cordovaSubTopicValue.setTitle(self.app.isCordova())
 
         if self.app.isCordova() == "Yes" and len(self.app.getCordovaPlugins()) > 0:
-            plugins = sst.addSubTopic()
+            plugins = cordovaSubTopicValue.addSubTopic()
             plugins.setTitle("Plugins")
             self.createSubTopics(plugins, self.app.getCordovaPlugins())
 
-        st = propertiesTopic.addSubTopic()
-        st.setTitle("Outsystems")
-        st.addSubTopic().setTitle(self.app.isOutsystems())
+        outsystemsSubTopic = propertiesTopic.addSubTopic()
+        outsystemsSubTopic.setTitle("Outsystems")
+        outsystemsSubTopic.addSubTopic().setTitle(self.app.isOutsystems())
+
+        reactSubTopic = propertiesTopic.addSubTopic()
+        reactSubTopic.setTitle("React Native")
+        reactSubTopic.addSubTopic().setTitle(self.app.isReactNative())
 
         st = propertiesTopic.addSubTopic()
         st.setTitle("Backup Enabled")
@@ -164,7 +168,7 @@ class ApkXmind:
                 i = 1
                 for filter in filters:
                     st = topicElement.addSubTopic()
-                    sst.setTitle("Intent Filter " + str(i))
+                    st.setTitle("Intent Filter " + str(i))
                     i += 1
                     action = st.addSubTopic()
                     action.setTitle("Action")
@@ -198,7 +202,7 @@ class ApkXmind:
                 i = 1
                 for filter in filters:
                     st = topicElement.addSubTopic()
-                    sst.setTitle("Intent Filter " + str(i))
+                    st.setTitle("Intent Filter " + str(i))
                     i += 1
                     action = st.addSubTopic()
                     action.setTitle("Action")
@@ -240,7 +244,7 @@ class ApkXmind:
                 i = 1
                 for filter in filters:
                     st = topicElement.addSubTopic()
-                    sst.setTitle("Intent Filter " + str(i))
+                    st.setTitle("Intent Filter " + str(i))
                     i += 1
                     action = st.addSubTopic()
                     action.setTitle("Action")
@@ -274,7 +278,7 @@ class ApkXmind:
                 i = 1
                 for filter in filters:
                     st = topicElement.addSubTopic()
-                    sst.setTitle("Intent Filter " + str(i))
+                    st.setTitle("Intent Filter " + str(i))
                     i += 1
                     action = st.addSubTopic()
                     action.setTitle("Action")
