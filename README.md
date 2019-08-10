@@ -63,6 +63,7 @@ Each time the tool runs against a package, if the xmind map already exists, a ne
   * Target SDK Version
   * Technology/Framework fingerprinting
       * Outsystems
+      * React Native
       * Cordova
           - Used Plugins 
       * Xamarin
