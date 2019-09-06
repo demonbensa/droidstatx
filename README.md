@@ -135,6 +135,7 @@ That being said, I've tested the tool against the top 30 applications in the Pla
 * Android Hacker's Handbook (Book)
 * Android Security Internals (Book)
 * The Mobile Application Hacker's Handbook (Book)
+* [OWASP Mobile Security Testing Guide](https://github.com/OWASP/owasp-mstg)
 
 **Credits**
 
