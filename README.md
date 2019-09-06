@@ -115,7 +115,7 @@ The static code analysis is being done by using apktool from Ryszard Wiśniewski
 
 **A Long Time Ago in a Galaxy Far, Far Away...**
 
-The development of Droidstat started mid 2015 and it was presented in July in Bsides Lisbon 2015 (Slides). Life got in the way and with the typical fear of releasing ugly code online, the tool was kept private at the time.
+The development of Droidstat started mid 2015 and it was presented in July in Bsides Lisbon 2015 ([Slides](https://pt.slideshare.net/clviper/is-my-app-secure-51493019)). Life got in the way and with the typical fear of releasing ugly code online, the tool was kept private at the time.
 
 Droidstat aims to be a static/dynamic analysis framework, which does more than just flag issues (there are already several ones which do that, like Androbugs or MobSF), it allows to create a methodology and a workflow to achieve consistency.
 
