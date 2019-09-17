@@ -351,7 +351,7 @@ class App:
                 self.smaliChecks.determineContentProviderSQLi(providerName)
                 self.smaliChecks.determineContentProviderPathTraversal(providerName)
             elif provider.get(self.NS_ANDROID + "exported") != 'false':
-                if self.minSDKVersion <= 16:
+                if int(self.minSDKVersion) <= 16:
                     self.extractComponentPermission(provider)
                     self.smaliChecks.determineContentProviderSQLi(providerName)
                     self.smaliChecks.determineContentProviderPathTraversal(providerName)
