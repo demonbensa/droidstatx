@@ -77,7 +77,8 @@ class App:
         "27": "Oreo 8.1.0",
         "28": "Pie 9",
         "29": "Android 10",
-        "30": "Android 11"
+        "30": "Android 11",
+        "31": "Android 12"
     }
     sha256 = ""
     packageName = ""
